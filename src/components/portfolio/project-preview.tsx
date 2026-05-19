@@ -10,57 +10,82 @@ type ProjectPreviewProps = {
   featured?: boolean;
 };
 
-export function ProjectPreview({
-  project,
-  index,
-  featured = false
-}: ProjectPreviewProps) {
+export function ProjectPreview({ project, index, featured = false }: ProjectPreviewProps) {
   return (
     <Link
       href={`/work/${project.slug}`}
-      className={cn(
-        "group grid gap-0 border border-[#1a1a1a] bg-[#0a0a0a] transition-colors hover:bg-[#0f0f0f]",
-        featured
-          ? "lg:grid-cols-[1.2fr_1fr]"
-          : "lg:grid-cols-[0.95fr_1.05fr]"
-      )}
+      className="group grid grid-cols-1 bg-[#080808] transition-colors duration-300 hover:bg-[#0c0c0c] lg:grid-cols-[auto_1fr_auto]"
     >
-      <div className="overflow-hidden">
+      {/* Index */}
+      <div className="hidden items-center border-r border-[#141414] px-6 lg:flex">
+        <span className="font-mono text-[10px] tracking-[0.25em] text-[#2a2a2a]">
+          0{index + 1}
+        </span>
+      </div>
+
+      {/* Media — appears on mobile/tablet above text */}
+      <div
+        className={cn(
+          "overflow-hidden border-b border-[#141414] lg:border-b-0 lg:border-r",
+          featured ? "lg:w-[520px]" : "lg:w-[400px]"
+        )}
+      >
         <MediaFrame
           media={project.cover}
           className={cn(
-            "min-h-64 sm:min-h-80",
-            featured && "sm:min-h-96"
+            "w-full",
+            featured ? "min-h-[260px] lg:min-h-[360px]" : "min-h-[220px] lg:min-h-[280px]"
           )}
         />
       </div>
-      <div className="flex flex-col justify-between gap-8 p-6 sm:p-8 lg:p-10">
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center justify-between gap-4">
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#888888]">
-              0{index + 1} / 05
-            </span>
-            <ArrowUpRightIcon className="size-5 text-[#888888] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#7c3aed]" />
-          </div>
+
+      {/* Content */}
+      <div className="flex flex-1 flex-col justify-between gap-6 p-6 sm:p-8 lg:p-10">
+        <div className="flex items-start justify-between gap-4">
           <div className="flex flex-col gap-3">
-            <div className="flex flex-wrap gap-3 text-sm text-[#888888]">
-              <span>{project.category}</span>
-              {project.status === "draft-slot" ? (
-                <span className="text-[#888888]/50">— Replaceable slot</span>
-              ) : null}
+            {/* Category + year */}
+            <div className="flex items-center gap-3">
+              <span className="border border-[#1e1e1e] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.22em] text-[#3a3a3a]">
+                {project.category}
+              </span>
+              <span className="font-mono text-[9px] tracking-[0.18em] text-[#2a2a2a]">
+                {project.year}
+              </span>
             </div>
-            <h2 className="font-display text-3xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
+            {/* Title */}
+            <h2
+              className={cn(
+                "font-display font-semibold leading-[0.9] tracking-tight text-[#f0ede8] transition-colors duration-300",
+                featured
+                  ? "text-[clamp(28px,4vw,52px)]"
+                  : "text-[clamp(24px,3vw,40px)]"
+              )}
+            >
               {project.title}
+              {project.status === "draft-slot" && (
+                <span className="ml-3 align-middle font-mono text-[10px] font-normal text-[#2a2a2a]">
+                  [slot]
+                </span>
+              )}
             </h2>
-            <p className="max-w-xl text-base leading-relaxed text-[#888888]">
-              {project.summary}
-            </p>
           </div>
+          {/* Arrow */}
+          <ArrowUpRightIcon className="mt-1 size-5 shrink-0 text-[#2a2a2a] transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#f0ede8]" />
         </div>
-        <p className="text-sm leading-relaxed text-[#888888]">
-          <span className="text-white">Role: </span>
-          {project.roleSummary}
+
+        {/* Summary */}
+        <p className="max-w-lg text-[13px] leading-[1.75] text-[#3a3a3a]">
+          {project.summary}
         </p>
+
+        {/* Bottom row */}
+        <div className="flex items-center justify-between gap-4 border-t border-[#111111] pt-5">
+          <p className="text-[12px] text-[#2e2e2e]">
+            <span className="text-[#3a3a3a]">Role — </span>
+            {project.roleSummary}
+          </p>
+          <div className="h-px w-8 shrink-0 bg-[#1e1e1e] transition-all duration-300 group-hover:w-12 group-hover:bg-[#e8e0d0]" />
+        </div>
       </div>
     </Link>
   );
